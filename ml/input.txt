@@ -1,0 +1,9 @@
+4
+1 101 300
+2 101 400
+3 102 200
+4 103 600
+3
+101 John Delhi
+102 Mary Mumbai
+103 Sam Bangalore
