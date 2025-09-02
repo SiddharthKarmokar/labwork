@@ -1,3 +1,7 @@
+# DBMS LAB
+## Siddharth Karmokar
+- 123CS0061
+
 # Gym Membership Management
 
 ## ER diagram  
