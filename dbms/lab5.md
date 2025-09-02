@@ -38,49 +38,26 @@
 ![er](../images/l5e9.png)
 
 - ## Part F
-### **22. What happens if `faculty_user` tries to insert into `EMPLOYEES`?**
+### 22.
 
-> If `faculty_user` **does not have the INSERT privilege** on the `EMPLOYEES` table, the operation will fail with a **permission error**:
-
-```sql
-ORA-01031: insufficient privileges
-```
-
-> To allow insertion, the following must be granted:
-
-```sql
-grant insert on employees to C##faculty_user;
-```
+If `faculty_user` tries to insert into `EMPLOYEES` without the INSERT privilege, the operation will fail with an "insufficient privileges" error.
 
 ---
 
-### **23. Can `clerk_user` still update after you revoked the privilege?**
+### 23.
 
-> **No**. Once the `UPDATE` privilege is revoked, `clerk_user` **can no longer perform update operations** on the table. Any attempt will result in a **permission denied error**:
-
-```sql
-ORA-01031: insufficient privileges
-```
+Once the `UPDATE` privilege is revoked, `clerk_user` can no longer update the table and will receive a permission denied error.
 
 ---
 
-### **24. Why is `WITH GRANT OPTION` considered dangerous in real systems?**
+### 24.
 
-> Because it allows a user to **grant the same privilege to others**, it can:
-
-* Bypass controlled access,
-* Lead to **unauthorized privilege escalation**,
-* Make tracking and revoking permissions harder,
-* Pose **security risks** in multi-user environments.
+`WITH GRANT OPTION` is dangerous because it allows users to grant privileges to others, potentially leading to uncontrolled access and security risks.
 
 ---
 
-### **25. What is the effect of granting privileges to `PUBLIC`?**
+### 25.
 
-> Granting to `PUBLIC` makes the privilege available to **all users in the database** — present and future.
-> It’s **high-risk** because:
+Granting privileges to `PUBLIC` gives all users, including unauthorized ones, access to the privilege, which can compromise database security.
 
-* Even unauthorized users gain access,
-* It breaks the principle of least privilege,
-* It may expose sensitive data or allow unintended actions.
-
+---
