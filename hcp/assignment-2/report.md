@@ -1,4 +1,5 @@
 # Parallel Sorting Check: Performance Analysis Report
+By Siddharth Karmokar, 123cs0061
 
 ## 1. Objective
 

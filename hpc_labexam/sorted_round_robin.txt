@@ -1,0 +1,24 @@
+0 : Hello
+0 : random is 75
+0 : Sending 75 to 1
+0 : Received 32 from 3
+0: I had 75, 3 had 32
+0 : Goodbye
+1 : Hello
+1 : random is 61
+1 : Received 75 from 0
+1 : Sending 61 to 2
+1: I had 61, 0 had 75
+1 : Goodbye
+2 : Hello
+2 : random is 47
+2 : Sending 47 to 3
+2 : Received 61 from 1
+2: I had 47, 1 had 61
+2 : Goodbye
+3 : Hello
+3 : random is 32
+3 : Received 47 from 2
+3 : Sending 32 to 0
+3: I had 32, 2 had 47
+3 : Goodbye

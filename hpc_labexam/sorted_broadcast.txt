@@ -1,0 +1,30 @@
+WORLD Rank 0 	| Color: 0 	| NEW Comm Rank: 0 (out of 2)
+WORLD Rank 1 	| Color: 1 	| NEW Comm Rank: 0 (out of 2)
+WORLD Rank 2 	| Color: 0 	| NEW Comm Rank: 1 (out of 2)
+WORLD Rank 3 	| Color: 1 	| NEW Comm Rank: 1 (out of 2)
+ 4784.171823| 0 | hello (c=0, p=0)
+ 4784.171823| 1 | hello (c=0, p=1)
+ 4784.171824| 1 | hello (c=1, p=1)
+ 4784.171828| 0 | hello (c=1, p=0)
+ 4784.171832| 1 | broadcasting 1
+ 4784.171832| 1 | broadcasting 5
+ 4784.171841| 0 | received 1
+ 4784.171842| 1 | received 1
+ 4784.171843| 0 | sleeping 1s
+ 4784.171844| 0 | received 5
+ 4784.171844| 1 | sleeping 5s
+ 4784.171846| 1 | received 5
+ 4784.171847| 0 | sleeping 7s
+ 4784.171847| 1 | sleeping 11s
+ 4785.171969| 0 | enter b-a-r-r-i-e-r
+ 4789.172040| 2 | enter b-a-r-r-i-e-r
+ 4789.172100| 0 | leave barrier
+ 4789.172101| 2 | leave barrier
+ 4789.172103| 1 | goodbye
+ 4789.172110| 0 | goodbye
+ 4791.171955| 1 | enter b-a-r-r-i-e-r
+ 4795.171880| 3 | enter b-a-r-r-i-e-r
+ 4795.171960| 3 | leave barrier
+ 4795.171960| 1 | leave barrier
+ 4795.171964| 1 | goodbye
+ 4795.171971| 0 | goodbye

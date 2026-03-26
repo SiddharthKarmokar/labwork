@@ -1,0 +1,4 @@
+Rank 0 sent: [ 00 01 02 03 ]  --->  Received: [ 00 10 20 30 ]
+Rank 1 sent: [ 10 11 12 13 ]  --->  Received: [ 01 11 21 31 ]
+Rank 2 sent: [ 20 21 22 23 ]  --->  Received: [ 02 12 22 32 ]
+Rank 3 sent: [ 30 31 32 33 ]  --->  Received: [ 03 13 23 33 ]
