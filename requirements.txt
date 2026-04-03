@@ -23,3 +23,5 @@ einops
 ipykernel
 jupyter_client
 jupyter_core
+
+ollama run deepseek-coder:1.3b-instruct-q4
