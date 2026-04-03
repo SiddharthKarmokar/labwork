@@ -1,55 +1,73 @@
-#include <stdio.h>
+#include<stdio.h>
 #include<cuda_runtime.h>
+#include<stdlib.h>
 
-// Define the number of threads per block
-#define BLOCK_SIZE 256 
+#define BLOCK_SIZE 1024
 
-__global__ void prefixSumInclusive(const float *idata, float *odata, int n) {
-    // 1. Allocate shared memory for the block
-    // We use shared memory because threads will be reading each other's intermediate results
-    __shared__ float temp[BLOCK_SIZE];
+__global__ void prefixSum(int *a, int *b, int n){
+	__shared__ int temp[BLOCK_SIZE];
+	
+	int tid = threadIdx.x;
+	int gid = tid + blockIdx.x * blockDim.x;
+	
+	if(gid < n){
+		temp[tid] = a[gid];
+	}else{
+		temp[tid] = 0;
+	}
+	__syncthreads();
+	for(int offset = 1; offset <= blockDim.x; offset *= 2){
+		int val = 0;
+		if(tid < n && tid >= offset){
+			val = temp[tid - offset];
+		}
+		__syncthreads();
+		if(tid >= offset){
+			temp[tid] += val;
+		}
+		__syncthreads();
+	}
 
-    int tid = threadIdx.x;
-    int gid = blockIdx.x * blockDim.x + threadIdx.x;
-
-    // 2. Load data from global memory into shared memory
-    // If the global ID is out of bounds, pad with 0.0f so it doesn't affect the sum
-    if (gid < n) {
-        temp[tid] = idata[gid];
-    } else {
-        temp[tid] = 0.0f;
-    }
-    
-    // Wait for all threads to finish loading their element
-    __syncthreads(); 
-
-    // 3. The Hillis-Steele Scan Loop
-    // We increase the look-back offset by powers of 2 (1, 2, 4, 8, 16...)
-    for (int offset = 1; offset < blockDim.x; offset *= 2) {
-        
-        float val = 0.0f;
-        
-        // Read the value from the "left" (if the thread index is past the offset)
-        if (tid >= offset) {
-            val = temp[tid - offset];
-        }
-        
-        // SYNC 1: Ensure all threads have READ their required values before anyone writes.
-        // This prevents Read-After-Write (RAW) hazards.
-        __syncthreads(); 
-
-        // Add the value to our current position
-        if (tid >= offset) {
-            temp[tid] += val;
-        }
-        
-        // SYNC 2: Ensure all threads have WRITTEN their new sums before moving to the next offset.
-        __syncthreads(); 
-    }
-
-    // 4. Write the final computed scan back to global memory
-    if (gid < n) {
-        odata[gid] = temp[tid];
-    }
+	if(gid < n){
+		b[gid] = temp[tid];
+	}
 }
 
+
+int main(){
+	int *a, *b;
+	int n = 1024;
+	size_t size = n * sizeof(int);
+	a = (int*)malloc(size);
+	b = (int*)malloc(size);
+	for(int i = 0; i < n; i++){
+		a[i] = i + 1;
+	}
+
+	int *d_a, *d_b;
+	cudaMalloc(&d_a, size);
+	cudaMalloc(&d_b, size);
+	cudaMemcpy(d_a, a, size, cudaMemcpyHostToDevice);
+	
+	int threadsPerBlock = 1024;
+	int blocksPerGrid = 1;
+	
+	prefixSum<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, n);
+	
+	cudaMemcpy(b, d_b, size, cudaMemcpyDeviceToHost);
+	for(int i = 0; i < n; i++){
+		printf("%d ", b[i]);
+	}
+	printf("\n");
+	free(a);
+	free(b);
+	cudaFree(d_a);
+	cudaFree(d_b);
+	cudaDeviceSynchronize();
+	cudaError_t err = cudaGetLastError();
+	if(err != cudaSuccess){
+		printf("CUDA Error: %s\n", cudaGetErrorString(err));
+	}
+
+	return 0;
+}
