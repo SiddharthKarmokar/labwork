@@ -1,6 +1,41 @@
 #include <stdio.h>
 #include <cuda_runtime.h>
 
+__global__ void
+interleaved_reduction_kernel(float* g_out, float* g_in, unsigned int size)
+{
+    unsigned int idx_x = blockIdx.x * blockDim.x + threadIdx.x;
+    
+    // 1. Dynamic shared memory allocation
+    extern __shared__ float s_data[];
+
+    // 2. Load data into shared memory (with bounds checking)
+    s_data[threadIdx.x] = (idx_x < size) ? g_in[idx_x] : 0.f;
+    __syncthreads();
+
+    // 3. Perform reduction in shared memory
+    // Stride starts at 1 and doubles; threads participate if their index 
+    // is a multiple of (2 * stride)
+    for (unsigned int stride = 1; stride < blockDim.x; stride *= 2) {
+        
+        // We use 'index' to ensure we only target the "starts" of the active pairs
+        int index = 2 * stride * threadIdx.x;
+
+        if (index < blockDim.x) {
+            s_data[index] += s_data[index + stride];
+        }
+        
+        // Synchronize after every step of the reduction
+        __syncthreads();
+    }
+
+    // 4. Write the result of this block to global memory
+    if (threadIdx.x == 0) {
+        g_out[blockIdx.x] = s_data[0];
+    }
+}
+
+
 // ================= KERNEL =================
 __global__ void reduction_kernel(float* d_out, float* d_in,
                                  unsigned int size) {
